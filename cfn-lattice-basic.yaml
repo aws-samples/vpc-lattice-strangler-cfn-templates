@@ -1,0 +1,96 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A simple VPC Lattice deployment
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID
+  LegacySecurityGroup:
+    Type: String
+    Description: SG for the legacy  EC2 instance
+  LegacyWeight:
+    Type: Number
+    Description: weight for Legacy version
+  NewServiceWeight:
+    Type: Number
+    Description: weight for new version
+  PrivateIpAdressLegacy:
+    Type: "String"
+    Description: PrivateIpAdressLegacy
+  NewProductFunction:
+    Type: "String"
+    Description: the new product function ARN
+Resources:
+  VpcLatticeService:
+    Type: "AWS::VpcLattice::Service"
+    Properties: 
+      Name: "product-service"
+      AuthType: NONE
+  VpcLatticeListener:
+    Type: "AWS::VpcLattice::Listener"
+    Properties: 
+      DefaultAction: 
+        Forward:
+          TargetGroups: 
+              - TargetGroupIdentifier: !GetAtt VpcLatticeLambdaTargetGroup.Id
+                Weight: !Ref NewServiceWeight
+              - TargetGroupIdentifier: !GetAtt VpcLatticeLegacyTargetGroup.Id
+                Weight: !Ref LegacyWeight
+      Name: "product-listener"
+      Port: 80
+      Protocol: HTTP
+      ServiceIdentifier: !GetAtt VpcLatticeService.Id
+  VpcLatticeLambdaTargetGroup:
+    Type: "AWS::VpcLattice::TargetGroup"
+    Properties: 
+      Name: "product-lambda-target-example"
+      Type: LAMBDA
+      Tags: 
+        - Key: "version"
+          Value: "newproductv2"
+      Targets: 
+        - Id: !Ref NewProductFunction
+      Tags: 
+        - Key: "version"
+          Value: "productv2"
+  VpcLatticeLegacyTargetGroup:
+    Type: "AWS::VpcLattice::TargetGroup"
+    Properties: 
+      Name: "product-legacy-ec2"
+      Config:
+        Port: 80
+        Protocol: HTTP
+        VpcIdentifier: !Ref VPC
+      Type: IP
+      Tags: 
+        - Key: "version"
+          Value: "productv1"
+      Targets: 
+        - Id: !Ref PrivateIpAdressLegacy
+  VpcLatticeAssociationLambda:
+    Type: AWS::VpcLattice::ServiceNetworkServiceAssociation
+    Properties: 
+      ServiceIdentifier: !GetAtt VpcLatticeService.Id
+      ServiceNetworkIdentifier: !GetAtt VpcLatticeServiceNetwork.Id
+  HardcoreVPCAssociation:
+    Type: AWS::VpcLattice::ServiceNetworkVpcAssociation
+    Properties: 
+      SecurityGroupIds: 
+        - !GetAtt LatticeVPCAssociationSecurityGroup.GroupId
+      VpcIdentifier: !Ref VPC
+      ServiceNetworkIdentifier: !GetAtt VpcLatticeServiceNetwork.Id
+  VpcLatticeServiceNetwork:
+    Type: "AWS::VpcLattice::ServiceNetwork"
+    Properties: 
+      Name: 'shopping-cart-network'
+      AuthType: NONE 
+  LatticeVPCAssociationSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: guardrail of outside traffic for the network
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref LegacySecurityGroup 

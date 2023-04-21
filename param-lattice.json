@@ -1,0 +1,26 @@
+[
+    {
+      "ParameterKey": "VPC",
+      "ParameterValue": "vpc-0150b33820800c31f"
+    },
+    {
+      "ParameterKey": "LegacySecurityGroup",
+      "ParameterValue": "sg-058c23f82028da2c0"
+    },
+    {
+      "ParameterKey": "LegacyWeight",
+      "ParameterValue": "80"
+    },
+    {
+      "ParameterKey": "NewServiceWeight",
+      "ParameterValue": "20"
+    },
+    {
+      "ParameterKey": "PrivateIpAdressLegacy",
+      "ParameterValue": "172.31.0.12"
+    },
+    {
+      "ParameterKey": "NewProductFunction",
+      "ParameterValue": "arn:aws:lambda:us-east-1:513941538988:function:newProductV2"
+    } 
+]

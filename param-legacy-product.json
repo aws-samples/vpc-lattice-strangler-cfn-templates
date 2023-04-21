@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-0150b33820800c31f"
+  },
+  {
+    "ParameterKey": "SubnetId",
+    "ParameterValue": "subnet-04bbbad84805f761a"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "nginx"
+  },
+  {
+    "ParameterKey": "PrivateIpAdress",
+    "ParameterValue": "172.31.0.12"
+  }
+]

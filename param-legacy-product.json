@@ -1,18 +1,18 @@
 [
   {
     "ParameterKey": "VPC",
-    "ParameterValue": "vpc-0150b33820800c31f"
+    "ParameterValue": "vpc-putyourvpcid"
   },
   {
     "ParameterKey": "SubnetId",
-    "ParameterValue": "subnet-04bbbad84805f761a"
+    "ParameterValue": "subnet-putyoursubnet"
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "nginx"
+    "ParameterValue": "putyourexistingkeypair"
   },
   {
     "ParameterKey": "PrivateIpAdress",
-    "ParameterValue": "172.31.0.12"
+    "ParameterValue": "x.x.x.x"
   }
 ]

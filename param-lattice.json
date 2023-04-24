@@ -1,11 +1,11 @@
 [
     {
       "ParameterKey": "VPC",
-      "ParameterValue": "vpc-0150b33820800c31f"
+      "ParameterValue": "vpc-putyourvpcid"
     },
     {
       "ParameterKey": "LegacySecurityGroup",
-      "ParameterValue": "sg-058c23f82028da2c0"
+      "ParameterValue": "sg-putyousghere"
     },
     {
       "ParameterKey": "LegacyWeight",
@@ -17,10 +17,14 @@
     },
     {
       "ParameterKey": "PrivateIpAdressLegacy",
-      "ParameterValue": "172.31.0.12"
+      "ParameterValue": "x.x.x.x"
     },
     {
       "ParameterKey": "NewProductFunction",
-      "ParameterValue": "arn:aws:lambda:us-east-1:513941538988:function:newProductV2"
+      "ParameterValue": "addarnoffunctionhere"
+    } ,
+    {
+      "ParameterKey": "NewProductFunction",
+      "ParameterValue": "pl-addprefixlistidhere"
     } 
 ]

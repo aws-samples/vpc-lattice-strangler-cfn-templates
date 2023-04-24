@@ -13,10 +13,9 @@ Parameters:
   PrivateIpAdress:
     Type: String
     Description: Input the private IP for your Product Service box
-  LatticePrefix:
+  LatticePrefixId:
     Type: String
     Description: Prefix list for Lattice
-    Default: "pl-07cbd8b5e26960eac"
 Resources:
   LegacyProductAppInstance:
     Type: AWS::EC2::Instance
@@ -32,7 +31,7 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash
           sudo yum update -y
-          sudo amazon-linux-extras install nginx1 -y 
+          sudo amazon-linux-extras install nginx -y 
           sudo systemctl enable nginx
           sudo systemctl start nginx
   LegacyProdAppSecurityGroup:
@@ -50,7 +49,7 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-          SourcePrefixListId: !Ref LatticePrefix 
+          SourcePrefixListId: !Ref LatticePrefixId 
 Outputs:
   LegacyProductAppInstanceIp:
     Value: !GetAtt LegacyProductAppInstance.PrivateIp

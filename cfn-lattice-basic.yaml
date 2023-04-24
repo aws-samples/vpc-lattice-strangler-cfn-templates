@@ -90,10 +90,16 @@ Resources:
       GroupDescription: guardrail of outside traffic for the network
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: tcp
+        - Description: Allow inbound requests from legacy Prod SG
+          IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          SourceSecurityGroupId: !Ref LegacySecurityGroup 
+          SourceSecurityGroupId: !Ref LegacySecurityGroup
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
 Outputs:
   ProductServiceDomain:
     Value: !GetAtt VpcLatticeService.DnsEntry.DomainName

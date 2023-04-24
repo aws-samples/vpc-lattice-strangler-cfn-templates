@@ -41,14 +41,19 @@ Resources:
   LegacyProdAppSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: 'nginx-product'
       GroupDescription: Primary security group for the EC2 instance
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: tcp
+        - Description: Allows traffic flowing in from VpcLattice
+          IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           SourcePrefixListId: !Ref LatticePrefixId 
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
   SSMIAMRole:
     Type: AWS::IAM::Role
     Properties:

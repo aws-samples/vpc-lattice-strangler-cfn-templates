@@ -94,3 +94,8 @@ Resources:
           FromPort: 80
           ToPort: 80
           SourceSecurityGroupId: !Ref LegacySecurityGroup 
+Outputs:
+  ProductServiceDomain:
+    Value: !GetAtt VpcLatticeService.DnsEntry.DomainName
+    Export:
+      Name: ProductDomain

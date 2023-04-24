@@ -1,11 +1,11 @@
 [
     {
       "ParameterKey": "VPC",
-      "ParameterValue": "vpc-putyourvpcid"
+      "ParameterValue": "vpc-xxxxx"
     },
     {
       "ParameterKey": "LegacySecurityGroup",
-      "ParameterValue": "sg-putyousghere"
+      "ParameterValue": "sg-xxxxxxx"
     },
     {
       "ParameterKey": "LegacyWeight",
@@ -21,10 +21,6 @@
     },
     {
       "ParameterKey": "NewProductFunction",
-      "ParameterValue": "addarnoffunctionhere"
-    } ,
-    {
-      "ParameterKey": "NewProductFunction",
-      "ParameterValue": "pl-addprefixlistidhere"
+      "ParameterValue": "arn:aws:lambda:region:xxxxxx:function:xxxxx"
     } 
 ]

@@ -20,7 +20,8 @@ Resources:
   LegacyProductAppInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-02396cdd13e9a1257
+      IamInstanceProfile: !Ref WebServerInstanceProfile
+      ImageId: ami-0dfcb1ef8550277af
       InstanceType: t2.micro
       KeyName: !Ref KeyPairName
       SubnetId: !Ref SubnetId
@@ -28,12 +29,15 @@ Resources:
       SecurityGroupIds:
         - !GetAtt LegacyProdAppSecurityGroup.GroupId
       UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          sudo yum update -y
-          sudo amazon-linux-extras install nginx -y 
-          sudo systemctl enable nginx
-          sudo systemctl start nginx
+        Fn::Base64:
+          !Sub  |
+            #!/bin/bash
+            yum update -y
+            sudo amazon-linux-extras install nginx1 -y
+            sudo systemctl enable --now nginx
+            sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+            sudo systemctl start amazon-ssm-agent
+
   LegacyProdAppSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -44,12 +48,27 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
           SourcePrefixListId: !Ref LatticePrefixId 
+  SSMIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+  WebServerInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref SSMIAMRole
+
 Outputs:
   LegacyProductAppInstanceIp:
     Value: !GetAtt LegacyProductAppInstance.PrivateIp

@@ -1,10 +1,5 @@
 # AWS VPC Lattice deployment with a CloudFormation Template
 
-## Table of Contents
-1. [About this Repo](#About)
-2. [Additional Examples](#AddEx)
-3. [License](#License)
-
 ## About this Repo <a name="About"></a>
 This repository contains an example of how use Vpc Lattice to Strangle your legacy application deployed in EC2. 
 A lot of times throughout startup journey, there is a clear requirement for speed and experimentation. Once the feasibility, usage and MVP are proven, engineering teams will pivot to scaling goals. often times is a non trivial task to refactor your architecture and break your monolith in smaller chunks while reducing risk of downtime.
@@ -25,6 +20,44 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
 ### Official Resources
 - [Cloud Formation references](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_VpcLattice.html)
 - [Strangler original Martin Fowler's article](https://martinfowler.com/bliki/StranglerFigApplication.html)
+- [Work with prefix lists] (https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html)
+ - [AWS CloudFormation CLI] (https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/index.html)
+
+## Pre requisites
+
+1. [AWS CLI installed](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. Access to an AWS account
+3. [Credentials configured](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+4. [git installed on your environment](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+## Deployment Instructions
+
+1. Create a new directory, navigate to that directory in a terminal and clone the GitHub repository:
+    ``` 
+    git clone https://github.com/aws-samples/add-the-repo-here
+    ```
+2. Modify the param-legacy-product.json file to be based on your local environment
+3. From the command line, use AWS CLI to deploy the first cloudformation template. This template will deploy a mock legacy application (plain nginx) in EC2 box.
+    ```
+    aws cloudformation deploy --template-file cfn-legacy-product.yaml --stack-name product-legacy --parameter-overrides "$(cat param-legacy-product.json)" --capabilities CAPABILITY_IAM
+    ```
+4. From the command line, use AWS CLI to deploy the second cloudformation template. This template will deploy a mock new application in lambda.
+    ```
+   aws cloudformation deploy --template-file cfn-new-product.yaml --stack-name new-product-stack --capabilities CAPABILITY_NAMED_IAM
+    ```
+5. Look into the outputs of both stacks that have been deployed and replace the values in paral-lattice.json with the ones displayed in outputs section.
+
+6. From the command line, use AWS CLI to deploy the third cloudformation template. This template will setup Vpc Lattice and weigthed targets.
+    ```
+   aws cloudformation deploy --template-file cfn-lattice-basic.yaml --stack-name vpc-lattice-stack --parameter-overrides "$(cat param-lattice.json)"   
+    ```
+
+
+## Testing
+
+1. Using the output from the third CFN stack you created, collect domain url and use it to hit it using curl, or your http IDE of choice. You should see different outputs statistically matching weights configured.
+
+----
 
 ## How to deploy the CFN Templates
 
@@ -43,3 +76,7 @@ This library is licensed under the Apache 2.0 License.
 Q:I am not being able to hit the service domain from my test environment. Why?
 
 If you are hitting the domain from your VPC, most likely you have to allow inbound traffic from the resource you are doing it. If it is an EC2 box, add a new inbound rule refering its security group in the security group tied to the VPC association within the VPC lattice service network.
+Furthermore make sure the reference of the prefix list is the correct one, you can run the following command on the AWS CLI
+```
+aws ec2 describe-managed-prefix-lists --filters Name=owner-id,Values=AWS
+```

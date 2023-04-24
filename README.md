@@ -21,7 +21,7 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
 - [Cloud Formation references](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_VpcLattice.html)
 - [Strangler original Martin Fowler's article](https://martinfowler.com/bliki/StranglerFigApplication.html)
 - [Work with prefix lists] (https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html)
- - [AWS CloudFormation CLI] (https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/index.html)
+- [AWS CloudFormation CLI](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/index.html)
 
 ## Pre requisites
 

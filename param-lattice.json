@@ -16,6 +16,10 @@
       "ParameterValue": "20"
     },
     {
+      "ParameterKey": "NewServiceRoute",
+      "ParameterValue": "/product"
+    },
+    {
       "ParameterKey": "PrivateIpAdressLegacy",
       "ParameterValue": "x.x.x.x"
     },

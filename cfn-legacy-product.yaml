@@ -35,8 +35,6 @@ Resources:
             yum update -y
             sudo amazon-linux-extras install nginx1 -y
             sudo systemctl enable --now nginx
-            sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-            sudo systemctl start amazon-ssm-agent
 
   LegacyProdAppSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -51,8 +49,8 @@ Resources:
           SourcePrefixListId: !Ref LatticePrefixId 
       SecurityGroupEgress:
         - Description: Allow all outbound traffic
-          FromPort: 80
-          ToPort: 80
+          FromPort: -1 #change to all 
+          ToPort: -1
           CidrIp: 0.0.0.0/0
   SSMIAMRole:
     Type: AWS::IAM::Role

@@ -20,7 +20,6 @@ Resources:
   LegacyProductAppInstance:
     Type: AWS::EC2::Instance
     Properties:
-      IamInstanceProfile: !Ref WebServerInstanceProfile
       ImageId: ami-0dfcb1ef8550277af
       InstanceType: t2.micro
       KeyName: !Ref KeyPairName
@@ -35,7 +34,7 @@ Resources:
             yum update -y
             sudo amazon-linux-extras install nginx1 -y
             sudo systemctl enable --now nginx
-
+            
   LegacyProdAppSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -49,29 +48,8 @@ Resources:
           SourcePrefixListId: !Ref LatticePrefixId 
       SecurityGroupEgress:
         - Description: Allow all outbound traffic
-          FromPort: -1 #change to all 
-          ToPort: -1
+          IpProtocol: "-1"
           CidrIp: 0.0.0.0/0
-  SSMIAMRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-  WebServerInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-        - !Ref SSMIAMRole
-
 Outputs:
   LegacyProductAppInstanceIp:
     Value: !GetAtt LegacyProductAppInstance.PrivateIp

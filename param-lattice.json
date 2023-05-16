@@ -1,19 +1,15 @@
 [
     {
       "ParameterKey": "VPC",
-      "ParameterValue": "vpc-xxxxx"
+      "ParameterValue": "vpc-xxxx"
     },
     {
       "ParameterKey": "LegacySecurityGroup",
-      "ParameterValue": "sg-xxxxxxx"
+      "ParameterValue": "sg-xxxx"
     },
     {
-      "ParameterKey": "LegacyWeight",
-      "ParameterValue": "80"
-    },
-    {
-      "ParameterKey": "NewServiceWeight",
-      "ParameterValue": "20"
+      "ParameterKey": "TestEnvCidrIp",
+      "ParameterValue": "x.x.x.x/x"
     },
     {
       "ParameterKey": "NewServiceRoute",
@@ -25,6 +21,6 @@
     },
     {
       "ParameterKey": "NewProductFunction",
-      "ParameterValue": "arn:aws:lambda:region:xxxxxx:function:xxxxx"
+      "ParameterValue": "arn:aws:lambda:region:accountid:function:name"
     } 
 ]

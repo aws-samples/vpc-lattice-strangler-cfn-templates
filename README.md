@@ -4,7 +4,7 @@
 This repository contains an example of how use Vpc Lattice to Strangle your legacy application deployed in EC2. 
 A lot of times throughout startup journey, there is a clear requirement for speed and experimentation. Once the feasibility, usage and MVP are proven, engineering teams will pivot to scaling goals. often times is a non trivial task to refactor your architecture and break your monolith in smaller chunks while reducing risk of downtime.
 
-VPC Lattice is a great new service that not only allows a lot of the network complexitites to be abstrated away from your application integrations, but it also offers weighted routing, which can be used to strangle traffic from your monolith, while having the possibility to easily revert back traffic in case of issues start to be observed. 
+VPC Lattice is a great new service that not only allows a lot of the network complexitites to be abstrated away from your application integrations, but it also offers routing, which can be used to strangle traffic from your monolith, while having the possibility to easily revert back traffic in case of issues start to be observed. 
 
 This set of 3 cloudformation templates are broken down by a ilustrative representation of the legacy system (cfn-legacy-product), new service running on Lambda (cfn-new-product) and a template which spin ups the most important resources to bare minimum, functional VPC lattice setup.
 
@@ -47,7 +47,7 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
     ```
 5. Look into the outputs of both stacks that have been deployed and replace the values in paral-lattice.json with the ones displayed in outputs section.
 
-6. From the command line, use AWS CLI to deploy the third cloudformation template. This template will setup Vpc Lattice and weigthed targets.
+6. From the command line, use AWS CLI to deploy the third cloudformation template. This template will setup Vpc Lattice targets.
     ```
    aws cloudformation deploy --template-file cfn-lattice-basic.yaml --stack-name vpc-lattice-stack --parameter-overrides "$(cat param-lattice.json)"   
     ```
@@ -55,7 +55,7 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
 
 ## Testing
 
-1. Using the output from the third CFN stack you created, collect domain url and use it to hit it using curl, or your http IDE of choice. You should see different outputs statistically matching weights configured.
+1. Using the output from the third CFN stack you created, collect domain url and use it to hit it using curl, or your http IDE of choice. You should see different outputs depending of url matching
 
 ----
 
@@ -63,7 +63,7 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
 
 aws cloudformation deploy --template-file cfn-new-product.yaml --stack-name new-product-stack --capabilities CAPABILITY_NAMED_IAM
 
-aws cloudformation deploy --template-file cfn-legacy-product.yaml --stack-name product-legacy --parameter-overrides "$(cat param-legacy-product.json)" --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation deploy --template-file cfn-legacy-product.yaml --stack-name product-legacy --parameter-overrides "$(cat param-legacy-product.json)" 
 
 aws cloudformation deploy --template-file cfn-lattice-basic.yaml --stack-name vpc-lattice-stack --parameter-overrides "$(cat param-lattice.json)"   
 

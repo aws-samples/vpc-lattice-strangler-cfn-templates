@@ -22,6 +22,7 @@ Resources:
     Properties:
       ImageId: ami-0dfcb1ef8550277af
       InstanceType: t2.micro
+      Monitoring: "true"
       KeyName: !Ref KeyPairName
       SubnetId: !Ref SubnetId
       PrivateIpAddress: !Ref PrivateIpAdress
@@ -48,7 +49,9 @@ Resources:
           SourcePrefixListId: !Ref LatticePrefixId 
       SecurityGroupEgress:
         - Description: Allow all outbound traffic
-          IpProtocol: "-1"
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
 Outputs:
   LegacyProductAppInstanceIp:

@@ -14,7 +14,7 @@ Resources:
               }
       Handler: index.lambda_handler
       Role: !GetAtt IRunALambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.10
       Timeout: 30
       ReservedConcurrentExecutions: 10
       FunctionName: 'newProductV2'
@@ -40,7 +40,7 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: arn:aws:logs:*:*:*
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/newProductV2:*"
 Outputs:
   NewProductFunction:
     Value: !GetAtt NewProductFunction.Arn

@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: The first version of the product app. 
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the EC2 instance
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet ID for the EC2 instance
+  PrivateIpAdress:
+    Type: String
+    Description: Input the private IP for your Product Service box
+  LatticePrefixId:
+    Type: String
+    Description: Prefix list for Lattice
+Resources:
+  LegacyProductAppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0dfcb1ef8550277af
+      InstanceType: t2.micro
+      Monitoring: "true"
+      SubnetId: !Ref SubnetId
+      PrivateIpAddress: !Ref PrivateIpAdress
+      SecurityGroupIds:
+        - !GetAtt LegacyProdAppSecurityGroup.GroupId
+      UserData:
+        Fn::Base64:
+          !Sub  |
+            #!/bin/bash
+            yum update -y
+            sudo amazon-linux-extras install nginx1 -y
+            sudo systemctl enable --now nginx
+            
+  LegacyProdAppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Primary security group for the EC2 instance
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - Description: Allows traffic flowing in from VpcLattice
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourcePrefixListId: !Ref LatticePrefixId 
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+Outputs:
+  LegacyProductAppInstanceIp:
+    Value: !GetAtt LegacyProductAppInstance.PrivateIp
+  LegacyProductSG:
+    Value: !GetAtt LegacyProdAppSecurityGroup.GroupId

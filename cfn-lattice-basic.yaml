@@ -1,0 +1,130 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A simple VPC Lattice deployment
+Parameters:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID
+  LegacySecurityGroup:
+    Type: String
+    Description: SG for the legacy  EC2 instance
+  TestEnvCidrIp:
+    Type: String
+    Description: Source IP/CIDR to test service domain
+  NewServiceRoute:
+    Type: String
+    Description: Route for new service
+  PrivateIpAdressLegacy:
+    Type: "String"
+    Description: PrivateIpAdressLegacy
+  NewProductFunction:
+    Type: "String"
+    Description: the new product function ARN
+Resources:
+  VpcLatticeService:
+    Type: "AWS::VpcLattice::Service"
+    Properties: 
+      Name: "product-service"
+      AuthType: NONE
+  VpcLatticeListener:
+    Type: "AWS::VpcLattice::Listener"
+    Properties: 
+      DefaultAction: 
+        Forward:
+          TargetGroups: 
+              - TargetGroupIdentifier: !GetAtt VpcLatticeLegacyTargetGroup.Id
+                Weight: 100
+      Name: "product-listener"
+      Port: 80
+      Protocol: HTTP
+      ServiceIdentifier: !GetAtt VpcLatticeService.Id
+  RuleNewService:
+    Type: AWS::VpcLattice::Rule
+    Properties: 
+      Action: 
+        Forward:
+          TargetGroups: 
+              - TargetGroupIdentifier: !GetAtt VpcLatticeLambdaTargetGroup.Id
+                Weight: 100
+      ListenerIdentifier: !GetAtt VpcLatticeListener.Id
+      Match:
+        HttpMatch:
+          PathMatch: 
+            CaseSensitive: False
+            Match: 
+              Prefix: !Ref NewServiceRoute 
+      Name: "new-product-v2"
+      Priority: 1
+      ServiceIdentifier: !GetAtt VpcLatticeService.Id
+      Tags: 
+        - Key: "version"
+          Value: "newproductv2"
+  VpcLatticeLambdaTargetGroup:
+    Type: "AWS::VpcLattice::TargetGroup"
+    Properties: 
+      Name: "product-lambda-target-example"
+      Type: LAMBDA
+      Tags: 
+        - Key: "version"
+          Value: "newproductv2"
+      Targets: 
+        - Id: !Ref NewProductFunction
+      Tags: 
+        - Key: "version"
+          Value: "productv2"
+  VpcLatticeLegacyTargetGroup:
+    Type: "AWS::VpcLattice::TargetGroup"
+    Properties: 
+      Name: "monotith-legacy-ec2"
+      Config:
+        Port: 80
+        Protocol: HTTP
+        VpcIdentifier: !Ref VPC
+      Type: IP
+      Tags: 
+        - Key: "version"
+          Value: "monolith"
+      Targets: 
+        - Id: !Ref PrivateIpAdressLegacy
+  VpcLatticeAssociationLambda:
+    Type: AWS::VpcLattice::ServiceNetworkServiceAssociation
+    Properties: 
+      ServiceIdentifier: !GetAtt VpcLatticeService.Id
+      ServiceNetworkIdentifier: !GetAtt VpcLatticeServiceNetwork.Id
+  HardcoreVPCAssociation:
+    Type: AWS::VpcLattice::ServiceNetworkVpcAssociation
+    Properties: 
+      SecurityGroupIds: 
+        - !GetAtt LatticeVPCAssociationSecurityGroup.GroupId
+      VpcIdentifier: !Ref VPC
+      ServiceNetworkIdentifier: !GetAtt VpcLatticeServiceNetwork.Id
+  VpcLatticeServiceNetwork:
+    Type: "AWS::VpcLattice::ServiceNetwork"
+    Properties: 
+      Name: 'shopping-cart-network'
+      AuthType: NONE 
+  LatticeVPCAssociationSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: guardrail of outside traffic for the network
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - Description: Allow inbound requests from legacy Prod SG
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref LegacySecurityGroup
+        - Description: Source for tests
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref TestEnvCidrIp
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+Outputs:
+  ProductServiceDomain:
+    Value: !GetAtt VpcLatticeService.DnsEntry.DomainName
+    Export:
+      Name: ProductDomain

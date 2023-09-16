@@ -1,0 +1,26 @@
+[
+    {
+      "ParameterKey": "VPC",
+      "ParameterValue": "vpc-xxxx"
+    },
+    {
+      "ParameterKey": "LegacySecurityGroup",
+      "ParameterValue": "sg-xxxx"
+    },
+    {
+      "ParameterKey": "TestEnvCidrIp",
+      "ParameterValue": "x.x.x.x/x"
+    },
+    {
+      "ParameterKey": "NewServiceRoute",
+      "ParameterValue": "/product"
+    },
+    {
+      "ParameterKey": "PrivateIpAdressLegacy",
+      "ParameterValue": "x.x.x.x"
+    },
+    {
+      "ParameterKey": "NewProductFunction",
+      "ParameterValue": "arn:aws:lambda:region:accountid:function:name"
+    } 
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-xxx"
+  },
+  {
+    "ParameterKey": "SubnetId",
+    "ParameterValue": "subnet-xxx"
+  },
+  {
+    "ParameterKey": "PrivateIpAdress",
+    "ParameterValue": "x.x.x.x"
+  },
+  {
+    "ParameterKey": "LatticePrefixId",
+    "ParameterValue": "pl-xxxxxxx"
+  }
+]

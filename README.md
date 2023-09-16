@@ -69,7 +69,7 @@ aws cloudformation deploy --template-file cfn-lattice-basic.yaml --stack-name vp
 
 # License <a name="License"></a>
 
-This library is licensed under the Apache 2.0 License.
+This library is licensed under the MIT-0 License.
 
 # FAQ
 

@@ -7,9 +7,6 @@ Parameters:
   SubnetId:
     Type: AWS::EC2::Subnet::Id
     Description: Subnet ID for the EC2 instance
-  KeyPairName:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
   PrivateIpAdress:
     Type: String
     Description: Input the private IP for your Product Service box
@@ -23,7 +20,6 @@ Resources:
       ImageId: ami-0dfcb1ef8550277af
       InstanceType: t2.micro
       Monitoring: "true"
-      KeyName: !Ref KeyPairName
       SubnetId: !Ref SubnetId
       PrivateIpAddress: !Ref PrivateIpAdress
       SecurityGroupIds:

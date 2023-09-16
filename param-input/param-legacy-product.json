@@ -8,10 +8,6 @@
     "ParameterValue": "subnet-xxx"
   },
   {
-    "ParameterKey": "KeyPairName",
-    "ParameterValue": "keyname"
-  },
-  {
     "ParameterKey": "PrivateIpAdress",
     "ParameterValue": "x.x.x.x"
   },

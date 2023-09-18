@@ -1,16 +1,16 @@
 # AWS VPC Lattice deployment with a CloudFormation Template
 
 ## About this Repo <a name="About"></a>
-This repository contains an example of how use Vpc Lattice to Strangle your legacy application deployed in EC2. 
-A lot of times throughout startup journey, there is a clear requirement for speed and experimentation. Once the feasibility, usage and MVP are proven, engineering teams will pivot to scaling goals. often times is a non trivial task to refactor your architecture and break your monolith in smaller chunks while reducing risk of downtime.
+This repository contains an example of how to use Vpc Lattice to Strangle your legacy application deployed in EC2. 
+More often than not, throughout startup journey, there is a clear requirement for speed and experimentation. Once the feasibility, usage and MVP are proven, engineering teams will pivot to scaling goals. Usually, is a non trivial task to refactor your architecture and break your monolith in smaller chunks while reducing risk of downtime.
 
-VPC Lattice is a great new service that not only allows a lot of the network complexitites to be abstrated away from your application integrations, but it also offers routing, which can be used to strangle traffic from your monolith, while having the possibility to easily revert back traffic in case of issues start to be observed. 
+VPC Lattice can be leveraged that not only allows a lot of the network complexitites to be abstrated away from your application integrations, but it also offers routing, which can be used to strangle traffic from your monolith, while having the possibility to easily revert back traffic in case of issues start to be observed. 
 
 This set of 3 cloudformation templates are broken down by a ilustrative representation of the legacy system (cfn-legacy-product), new service running on Lambda (cfn-new-product) and a template which spin ups the most important resources to bare minimum, functional VPC lattice setup.
 
 ![Architecture](./lattice-strangler.png "Architecture")
 
-## Contraints
+## Constraints
 
 1) This example is built under the premise that a vpc (the traditional one) is already setup.
 2) For demonstration purposes, the legacy-product template was generated so you could run these templates in your own account and see how it works. In a real world situation, the legacy environment has been already setup and you just have to feed in the details in the parameter section.
@@ -20,7 +20,7 @@ This set of 3 cloudformation templates are broken down by a ilustrative represen
 ### Official Resources
 - [Cloud Formation references](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_VpcLattice.html)
 - [Strangler original Martin Fowler's article](https://martinfowler.com/bliki/StranglerFigApplication.html)
-- [Work with prefix lists] (https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html)
+- [Workins with prefix lists](https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html)
 - [AWS CloudFormation CLI](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/index.html)
 
 ## Pre requisites
@@ -69,7 +69,7 @@ aws cloudformation deploy --template-file cfn-lattice-basic.yaml --stack-name vp
 
 # License <a name="License"></a>
 
-This library is licensed under the MIT-0 License.
+This library is licensed under the Apache 2.0 License.
 
 # FAQ
 
